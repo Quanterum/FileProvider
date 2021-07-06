@@ -1,0 +1,377 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FileProvider</name>
+    </assembly>
+    <members>
+        <member name="T:FileProvider.Interfaces.IFileContents">
+            <summary>
+                Модель, описывающая файл для загрузки на сервер.
+            </summary>
+        </member>
+        <member name="P:FileProvider.Interfaces.IFileContents.FileName">
+            <summary>
+                Имя файла с расширением, прим.: "image.jpg"
+            </summary>
+        </member>
+        <member name="M:FileProvider.Interfaces.IFileContents.GetBytes">
+            <summary>
+                Метод получения массива байт
+            </summary>
+            <returns>Возвращает массив байт.</returns>
+        </member>
+        <member name="T:FileProvider.Interfaces.IFileManager`1">
+            <summary>
+                Менеджер для работы с файлами.
+            </summary>
+        </member>
+        <member name="M:FileProvider.Interfaces.IFileManager`1.UploadFileAsync(FileProvider.Interfaces.IFileContents)">
+            <summary>
+                Метод для сохранения файла из строки 'Base64' или массива байт.
+                <para>
+                    Метод принимает класс, реализующий интерфейс <see cref="T:FileProvider.Interfaces.IFileContents" />
+                    (<see cref="T:FileProvider.Models.BytesFileContents" /> или <see cref="T:FileProvider.Models.Base64FileContents" />)
+                </para>
+            </summary>
+            <param name="fileContents">Должен быть класс, реализующий интерфейс <see cref="T:FileProvider.Interfaces.IFileContents" /></param>
+            <returns>Возвращает объект <see cref="T:FileProvider.Models.FileData" />, соответствующий загруженному файлу.</returns>
+        </member>
+        <member name="M:FileProvider.Interfaces.IFileManager`1.UploadFiles(System.Collections.Generic.IEnumerable{FileProvider.Interfaces.IFileContents})">
+            <summary>
+                Метод для множественного сохранения файлов из строк 'Base64' или массивов байт.
+                <para>
+                    Метод принимает коллекцию классов, реализующих интерфейс <see cref="T:FileProvider.Interfaces.IFileContents" />
+                    (<see cref="T:FileProvider.Models.BytesFileContents" /> или <see cref="T:FileProvider.Models.Base64FileContents" />)
+                </para>
+            </summary>
+            <param name="files">Коллекция классов, реализующих интерфейс <see cref="T:FileProvider.Interfaces.IFileContents" /></param>
+            <returns>Возвращает коллекцию объектов <see cref="T:FileProvider.Models.FileData" />, соответствующих загруженным файлам.</returns>
+        </member>
+        <member name="M:FileProvider.Interfaces.IFileManager`1.DownloadFileAsync(System.String)">
+            <summary>
+                Метод для скачивания файла.
+            </summary>
+            <param name="hash">Хеш файла для скачивания</param>
+            <returns>Возвращает <see cref="T:System.IO.FileStream" /> с запрашиваемым файлом.</returns>
+        </member>
+        <member name="M:FileProvider.Interfaces.IFileManager`1.DownloadImageAsync(System.String,System.Nullable{System.ValueTuple{System.Int32,System.Int32}},System.String)">
+            <summary>
+                Метод для скачивания изображения с указанием необходимого размера.
+            </summary>
+            <param name="hash">Хеш файла для скачивания.</param>
+            <param name="resolution">Необходимый размер изображения.</param>
+            <param name="mimeType">Тип файла.</param>
+            <returns>Возвращает <see cref="T:System.IO.FileStream" /> с запрашиваемым изображением.</returns>
+        </member>
+        <member name="T:FileProvider.Models.Base64FileContents">
+            <inheritdoc />
+        </member>
+        <member name="M:FileProvider.Models.Base64FileContents.#ctor(System.String,System.String)">
+            <summary>
+                Конструктор
+            </summary>
+            <param name="filename">Наименование файла.</param>
+            <param name="base64">Файл, закодированный в base64.</param>
+        </member>
+        <member name="P:FileProvider.Models.Base64FileContents.FileName">
+            <inheritdoc />
+        </member>
+        <member name="M:FileProvider.Models.Base64FileContents.GetBytes">
+            <inheritdoc />
+        </member>
+        <member name="T:FileProvider.Models.BytesFileContents">
+            <inheritdoc />
+        </member>
+        <member name="M:FileProvider.Models.BytesFileContents.#ctor(System.String,System.Byte[])">
+            <summary>
+                Конструктор
+            </summary>
+            <param name="filename">Наименование файла.</param>
+            <param name="bytes">Файл, представленный в виде массива байт.</param>
+        </member>
+        <member name="P:FileProvider.Models.BytesFileContents.FileName">
+            <inheritdoc />
+        </member>
+        <member name="M:FileProvider.Models.BytesFileContents.GetBytes">
+            <inheritdoc />
+        </member>
+        <member name="T:FileProvider.Models.FileData">
+            <summary>
+                Модель описывающая файл
+            </summary>
+        </member>
+        <member name="M:FileProvider.Models.FileData.#ctor">
+            <summary>
+                Инициализация файла
+            </summary>
+        </member>
+        <member name="M:FileProvider.Models.FileData.#ctor(System.String,System.String,System.String,System.String,System.Int64)">
+            <summary>
+                Создание файла
+            </summary>
+            <param name="fileHash">Хеш-сумма содержимого файла</param>
+            <param name="fileUrl">Путь к файлу из внешней системы (URL отложенной загрузки файла)</param>
+            <param name="fileName">Имя файла</param>
+            <param name="mimeType">Тип MIME описывает содержимое файла</param>
+            <param name="fileSize">Размер файла</param>
+        </member>
+        <member name="M:FileProvider.Models.FileData.#ctor(System.String,System.String,System.String,System.String,System.Int64,System.DateTime,System.String)">
+            <summary>
+                Создание файла
+            </summary>
+            <param name="fileHash">Хеш-сумма содержимого файла</param>
+            <param name="fileUrl">Путь к файлу из внешней системы (URL отложенной загрузки файла)</param>
+            <param name="fileName">Имя файла</param>
+            <param name="mimeType">Тип MIME описывает содержимое файла</param>
+            <param name="fileSize">Размер файла</param>
+            <param name="dateCreation">Дата создания файла</param>
+            <param name="relativePath">Директория, в которой находится файл</param>
+        </member>
+        <member name="P:FileProvider.Models.FileData.FileHash">
+            <summary>
+                Хеш файла
+            </summary>
+        </member>
+        <member name="P:FileProvider.Models.FileData.FileUrl">
+            <summary>
+                Путь к файлу из внешней системы
+                (URL отложенной загрузки файла)
+            </summary>
+        </member>
+        <member name="P:FileProvider.Models.FileData.FileName">
+            <summary>
+                Имя файла
+            </summary>
+        </member>
+        <member name="P:FileProvider.Models.FileData.MimeType">
+            <summary>
+                Тип MIME описывает содержимое файла
+            </summary>
+        </member>
+        <member name="P:FileProvider.Models.FileData.FileSize">
+            <summary>
+                Размер файла
+            </summary>
+        </member>
+        <member name="P:FileProvider.Models.FileData.DateCreation">
+            <summary>
+                Дата создания файла
+            </summary>
+        </member>
+        <member name="P:FileProvider.Models.FileData.RelativePath">
+            <summary>
+                Директория, в которой находится файл
+            </summary>
+        </member>
+        <member name="M:FileProvider.Models.FileData.Rename(System.String)">
+            <summary>
+                Метод для переименования файла.
+            </summary>
+            <param name="fileName">Новое имя для файла.</param>
+        </member>
+        <member name="M:FileProvider.Models.FileData.SetDirectory(System.String)">
+            <summary>
+                Метод для установки дирректории
+            </summary>
+            <param name="relativePath">Относительный путь к файлу.</param>
+        </member>
+        <member name="T:FileProvider.Module.FileProviderStartupModule`1">
+            <summary>
+            Модуль добавляет в приложение систему работы с файлами.
+            Внедряет зависимость <see cref="!:IFileManager"/>
+            </summary>
+        </member>
+        <member name="M:FileProvider.Module.FileProviderStartupModule`1.#ctor">
+            <summary>
+            При пустом конструкторе используется секция конфигурации "FileStorageOptions"
+            <seealso cref="T:FileProvider.Options.FileStorageOptions"/>
+            </summary>
+        </member>
+        <member name="M:FileProvider.Module.FileProviderStartupModule`1.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FileProvider.Module.FileProviderStartupModule`1.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <inheritdoc/>
+        </member>
+        <member name="T:FileProvider.Options.FileStorageOptions">
+            <summary>
+                Модель для настройки параметров файлового менеджера
+            </summary>
+        </member>
+        <member name="P:FileProvider.Options.FileStorageOptions.StorageUserFilesPath">
+            <summary>
+                Путь для хранения пользовательских файлов
+            </summary>
+        </member>
+        <member name="P:FileProvider.Options.FileStorageOptions.StorageDataFilesPath">
+            <summary>
+                Путь для хранения системных файлов
+            </summary>
+        </member>
+        <member name="P:FileProvider.Options.FileStorageOptions.CacheFilesPath">
+            <summary>
+                Путь для хранения временных кэш-файлов
+            </summary>
+        </member>
+        <member name="P:FileProvider.Options.FileStorageOptions.IsCacheFilesAllowed">
+            <summary>
+                Включение/отключение кэширования изображений
+            </summary>
+        </member>
+        <member name="P:FileProvider.Options.FileStorageOptions.S3Options">
+            <summary>
+                Объект, описывающий параметры хранилища S3
+            </summary>
+        </member>
+        <member name="P:FileProvider.Options.FileStorageOptions.NFSOptions">
+            <summary>
+                Объект, описывающий параметры хранилища NFS
+            </summary>
+        </member>
+        <member name="T:FileProvider.Options.S3Options">
+            <summary>
+                Объект, описывающий параметры хранилища S3
+            </summary>
+        </member>
+        <member name="P:FileProvider.Options.S3Options.IsUploadsAllowed">
+            <summary>
+                Разрешена ли загрузка файлов в хранилище
+            </summary>
+        </member>
+        <member name="P:FileProvider.Options.S3Options.IsDownloadsAllowed">
+            <summary>
+                Разрешено ли скачивание из хранилища
+            </summary>
+        </member>
+        <member name="P:FileProvider.Options.S3Options.S3Url">
+            <summary>
+                URL сервера S3
+            </summary>
+        </member>
+        <member name="P:FileProvider.Options.S3Options.AccessKey">
+            <summary>
+                Ключ доступа к серверу S3
+            </summary>
+        </member>
+        <member name="P:FileProvider.Options.S3Options.SecretKey">
+            <summary>
+                Секретный ключ доступа к серверу
+            </summary>
+        </member>
+        <member name="P:FileProvider.Options.S3Options.BucketName">
+            <summary>
+                Название корзины на сервере S3
+            </summary>
+        </member>
+        <member name="T:FileProvider.Options.NFSOptions">
+            <summary>
+                Объект, описывающий параметры хранилища NFS
+            </summary>
+        </member>
+        <member name="P:FileProvider.Options.NFSOptions.IsUploadsAllowed">
+            <summary>
+                Разрешена ли загрузка файлов в хранилище
+            </summary>
+        </member>
+        <member name="P:FileProvider.Options.NFSOptions.IsDownloadsAllowed">
+            <summary>
+                Разрешено ли скачивание из хранилища
+            </summary>
+        </member>
+        <member name="P:FileProvider.Options.NFSOptions.StoragePath">
+            <summary>
+                Путь для сохранения файлов в хранилище NFS
+            </summary>
+        </member>
+        <member name="T:FileProvider.Services.FileManager`1">
+            <inheritdoc />
+        </member>
+        <member name="M:FileProvider.Services.FileManager`1.#ctor(Microsoft.Extensions.Options.IOptions{FileProvider.Options.FileStorageOptions})">
+            <summary>
+                Конструктор
+            </summary>
+            <param name="options">Модель для настройки параметров файлового менеджера</param>
+        </member>
+        <member name="M:FileProvider.Services.FileManager`1.UploadFileAsync(FileProvider.Interfaces.IFileContents)">
+            <inheritdoc />
+        </member>
+        <member name="M:FileProvider.Services.FileManager`1.UploadFiles(System.Collections.Generic.IEnumerable{FileProvider.Interfaces.IFileContents})">
+            <inheritdoc />
+        </member>
+        <member name="M:FileProvider.Services.FileManager`1.DownloadFileAsync(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:FileProvider.Services.FileManager`1.DownloadImageAsync(System.String,System.Nullable{System.ValueTuple{System.Int32,System.Int32}},System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:FileProvider.Services.ImageResolutions">
+            <summary>
+                Класс для упрощения работы с разрешениями изображений.
+            </summary>
+            <summary>
+                Константы разрешения изображений.
+            </summary>
+        </member>
+        <member name="M:FileProvider.Services.ImageResolutions.#ctor(System.Int32,System.Int32)">
+            <summary>
+                Конструктор для установки размеров изображения.
+            </summary>
+            <param name="width">Ширина изображения.</param>
+            <param name="height">Высота изображения.</param>
+        </member>
+        <member name="M:FileProvider.Services.ImageResolutions.GetResolution">
+            <summary>
+                Метод для извлечения разрешения изображения, если не заданы параметры, вернет '1920*1080'.
+            </summary>
+            <returns>Возвращает кортеж, содержащий ширину и высоту, '(1920, 1080)'.</returns>
+        </member>
+        <member name="F:FileProvider.Services.ImageResolutions.nHD_640x360">
+            <summary>
+                Константа для разрешения 640*360
+            </summary>
+        </member>
+        <member name="F:FileProvider.Services.ImageResolutions.HD_1280x720">
+            <summary>
+                Константа для разрешения 1280*720
+            </summary>
+        </member>
+        <member name="F:FileProvider.Services.ImageResolutions.FHD_1920x1080">
+            <summary>
+                Константа для разрешения 1920*1080
+            </summary>
+        </member>
+        <member name="T:FileProvider.MimeTypes">
+            <summary>
+            Provides utilities for mapping file names and extensions to MIME-types.
+            </summary>
+        </member>
+        <member name="P:FileProvider.MimeTypes.FallbackMimeType">
+            <summary>
+            The fallback MIME-type. Defaults to <c>application/octet-stream</c>.
+            </summary>
+        </member>
+        <member name="M:FileProvider.MimeTypes.GetMimeTypeExtensions(System.String)">
+            <summary>
+            Attempts to fetch all available file extensions for a MIME-type.
+            </summary>
+            <param name="mimeType">The name of the MIME-type</param>
+            <returns>All available extensions for the given MIME-type</returns>
+        </member>
+        <member name="M:FileProvider.MimeTypes.TryGetMimeType(System.String,System.String@)">
+            <summary>
+            Tries to get the MIME-type for the given file name.
+            </summary>
+            <param name="fileName">The name of the file.</param>
+            <param name="mimeType">The MIME-type for the given file name.</param>
+            <returns><c>true</c> if a MIME-type was found, <c>false</c> otherwise.</returns>
+        </member>
+        <member name="M:FileProvider.MimeTypes.GetMimeType(System.String)">
+            <summary>
+            Gets the MIME-type for the given file name,
+            or <see cref="P:FileProvider.MimeTypes.FallbackMimeType"/> if a mapping doesn't exist.
+            </summary>
+            <param name="fileName">The name of the file.</param>
+            <returns>The MIME-type for the given file name.</returns>
+        </member>
+    </members>
+</doc>
